@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements ServiceConnection {
             @Override
             public void run() {
                 ArrayList<Entity> myList = new ArrayList();
-                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -15, false));
+                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -15, true));
                 myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
                 if (jSessionService != null) {
                     jSessionService.LocationReceived(myList);
