@@ -9,8 +9,17 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -166,8 +175,10 @@ public class JSessionService extends Service {
                 "\nconnections: " + count;
     }
 
-    public void LocationReceived(double lat, double lon, double alt, double asim) {
-        long start = System.currentTimeMillis();
+    public void LocationReceived(ArrayList<Entity> entities)  {
+        String json = new Gson().toJson(entities);
+        TransmitString("{\"Entities\":" + json + "}");
+/*        long start = System.currentTimeMillis();
         Date date = new Date(start);
 
         String strhms = sdfhms.format(date); // hhmmss.sss
@@ -196,7 +207,16 @@ public class JSessionService extends Service {
         sb.append(",,");
         NMEAChecksum(sb);
 
-        TransmitString(sb.toString());
+        TransmitString(sb.toString());*/
+/*        StringBuilder sb = new StringBuilder();
+        sb.append(lat);
+        sb.append(',');
+        sb.append(lon);
+        sb.append(',');
+        sb.append(alt);
+        sb.append(',');
+        sb.append(asim);
+        TransmitString(sb.toString());*/
     }
 
 

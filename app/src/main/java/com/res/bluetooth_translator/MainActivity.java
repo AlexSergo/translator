@@ -21,10 +21,13 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements ServiceConnection {
 
@@ -75,6 +78,7 @@ public class MainActivity extends Activity implements ServiceConnection {
 //        });
 
         btn = findViewById(R.id.button1);
+
         btn.setOnClickListener(view -> onViewClick(btn));
     }
 
@@ -218,7 +222,17 @@ public class MainActivity extends Activity implements ServiceConnection {
     private void onViewClick(View view) {
         if (view == btn) {
             if (null != jSessionService) {
-                jSessionService.LocationReceived(55.53433, 45.23232, 123.12, 10.3);
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayList<Entity> myList = new ArrayList();
+                        myList.add(new Entity(55.53433, 45.23232, 123.12, 30.0));
+                        myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+                        jSessionService.LocationReceived(myList);
+                        //  Thread.sleep(2000);
+                          //  jSessionService.LocationReceived(myList);
+                        }
+                    });
             }
         }
     }
