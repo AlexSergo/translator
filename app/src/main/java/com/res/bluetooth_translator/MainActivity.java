@@ -68,6 +68,19 @@ public class MainActivity extends Activity implements ServiceConnection {
         StartBt();
 
         setContentView(R.layout.activity_main);
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Entity> myList = new ArrayList();
+                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -15, false));
+                myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+                if (jSessionService != null) {
+                    jSessionService.LocationReceived(myList);
+                }
+                //  Thread.sleep(2000);
+                //  jSessionService.LocationReceived(myList);
+            }
+        });
 //        MainActivity.this.runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -222,17 +235,20 @@ public class MainActivity extends Activity implements ServiceConnection {
     private void onViewClick(View view) {
         if (view == btn) {
             if (null != jSessionService) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ArrayList<Entity> myList = new ArrayList();
-                        myList.add(new Entity(55.53433, 45.23232, 123.12, 30.0));
-                        myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
-                        jSessionService.LocationReceived(myList);
-                        //  Thread.sleep(2000);
-                          //  jSessionService.LocationReceived(myList);
-                        }
-                    });
+                ArrayList<Entity> myList = new ArrayList();
+                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -15, true));
+                myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+                jSessionService.LocationReceived(myList);
+//                MainActivity.this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ArrayList<Entity> myList = new ArrayList();
+//                        myList.add(new Entity(55.53433, 45.23232, 123.12, 30.0));
+//                        myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+//                        //  Thread.sleep(2000);
+//                          //  jSessionService.LocationReceived(myList);
+//                        }
+//                    });
             }
         }
     }
