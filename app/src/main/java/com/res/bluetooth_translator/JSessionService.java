@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
@@ -176,47 +178,17 @@ public class JSessionService extends Service {
     }
 
     public void LocationReceived(ArrayList<Entity> entities)  {
-        String json = new Gson().toJson(entities);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String json = "";
+        try {
+            json = mapper.writeValueAsString(entities);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+//    String json = new Gson().toJson(entities);
         TransmitString("{\"Entities\":" + json + "}");
-/*        long start = System.currentTimeMillis();
-        Date date = new Date(start);
-
-        String strhms = sdfhms.format(date); // hhmmss.sss
-        String strdmy = sdfdmy.format(date); // ddmmyy
-
-        // http://www.gpsinformation.org/dale/nmea.htm#GGA
-        StringBuilder sb = new StringBuilder();
-        sb.append("$GPGGA,");
-        sb.append(strhms);
-        sb.append(',');
-        LatLonDegMin(sb, lat, 'N', 'S');
-        sb.append(',');
-        LatLonDegMin(sb, lon, 'E', 'W');
-        sb.append(String.format(Locale.US, ",1,%d,0.9,%.1f,M,,,,", 0, alt));
-        NMEAChecksum(sb);
-
-        // http://www.gpsinformation.org/dale/nmea.htm#RMC
-        sb.append("$GPRMC,");
-        sb.append(strhms);
-        sb.append(",A,");
-        LatLonDegMin(sb, lat, 'N', 'S');
-        sb.append(',');
-        LatLonDegMin(sb, lon, 'E', 'W');
-        sb.append(String.format(Locale.US, ",%.1f,%.1f,", 00.0, asim)); // loc.getSpeed () * KtPerMPS, loc.getBearing ()));
-        sb.append(strdmy);
-        sb.append(",,");
-        NMEAChecksum(sb);
-
-        TransmitString(sb.toString());*/
-/*        StringBuilder sb = new StringBuilder();
-        sb.append(lat);
-        sb.append(',');
-        sb.append(lon);
-        sb.append(',');
-        sb.append(alt);
-        sb.append(',');
-        sb.append(asim);
-        TransmitString(sb.toString());*/
+//    TransmitString(Double.toString(entities.get(0).lat));
     }
 
 
