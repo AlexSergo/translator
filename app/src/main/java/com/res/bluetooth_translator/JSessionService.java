@@ -114,7 +114,7 @@ public class JSessionService extends Service {
         gpsBlue = gpsb;
 
         if (pendingAlertTitle != null) {
-            gpsb.fatalError(pendingAlertTitle, pendingAlertMessage);
+//            gpsb.fatalError(pendingAlertTitle, pendingAlertMessage);
         }
     }
 
@@ -138,19 +138,19 @@ public class JSessionService extends Service {
         }
     }
 
-    /**
-     * Start up the app, display error message then stop the service.
-     */
-    public void fatalError(final String tit, final String msg) {
-        MainActivity gpsb = gpsBlue;
-        if (gpsb != null) {
-            gpsb.fatalError(tit, msg);
-        } else {
-            pendingAlertMessage = msg;
-            pendingAlertTitle = tit;
-            startActivity(getPackageManager().getLaunchIntentForPackage(getPackageName()));
-        }
-    }
+//    /**
+//     * Start up the app, display error message then stop the service.
+//     */
+//    public void fatalError(final String tit, final String msg) {
+//        MainActivity gpsb = gpsBlue;
+//        if (gpsb != null) {
+////            gpsb.fatalError(tit, msg);
+//        } else {
+//            pendingAlertMessage = msg;
+//            pendingAlertTitle = tit;
+//            startActivity(getPackageManager().getLaunchIntentForPackage(getPackageName()));
+//        }
+//    }
 
     /**
      * Current number of connections has changed.
@@ -189,35 +189,6 @@ public class JSessionService extends Service {
 //    String json = new Gson().toJson(entities);
         TransmitString("{\"Entities\":" + json + "}");
 //    TransmitString(Double.toString(entities.get(0).lat));
-    }
-
-
-    // convert a number of degrees to ddmm.1000s string
-    private static void LatLonDegMin(StringBuilder sb, double ll, char pos, char neg) {
-        int min1000 = (int) Math.round(ll * 60000.0);
-        if (min1000 < 0) {
-            min1000 = -min1000;
-            pos = neg;
-        }
-        int deg = min1000 / 60000;
-        min1000 %= 60000;
-        int min = min1000 / 1000;
-        min1000 %= 1000;
-        sb.append(String.format(Locale.US, "%d%02d.%03d", deg, min, min1000));
-        sb.append(',');
-        sb.append(pos);
-    }
-
-    // append NMEA checksum and CRLF to a string
-    private static void NMEAChecksum(StringBuilder sb) {
-        int len = sb.length();
-        int xor = 0;
-        for (int i = len; --i > 0; ) {
-            char c = sb.charAt(i);
-            if (c == '$') break;
-            xor ^= c;
-        }
-        sb.append(String.format(Locale.US, "*%02X\r\n", xor));
     }
 
     // transmit to all connected bluetooth EFB apps

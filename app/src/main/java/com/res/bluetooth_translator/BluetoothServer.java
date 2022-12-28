@@ -1,5 +1,6 @@
 package com.res.bluetooth_translator;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothServerSocket;
@@ -97,6 +98,7 @@ public class BluetoothServer {
             }
         }
 
+        @SuppressLint("MissingPermission")
         @Override
         public void run() {
             try {
@@ -122,8 +124,8 @@ public class BluetoothServer {
                 }
                 serverSocket = null;
                 if (!finished) {
-                    jSessionService.fatalError("Bluetooth Error",
-                            "try starting bluetooth\nor try different UUID\n\n" + e.getMessage());
+//                    jSessionService.fatalError("Bluetooth Error",
+//                            "try starting bluetooth\nor try different UUID\n\n" + e.getMessage());
                 }
             }
         }

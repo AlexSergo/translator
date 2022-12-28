@@ -1,6 +1,7 @@
 package com.res.bluetooth_translator;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@RequiresApi(api = Build.VERSION_CODES.S)
 public class MainActivity extends Activity implements ServiceConnection {
 
     private Button btn;
@@ -36,16 +39,10 @@ public class MainActivity extends Activity implements ServiceConnection {
     private static final int REQUEST_PERMISSION_CODE = 12345;
 
     private static final String[] REQUIRED_PERMISSION_LIST = new String[] {
-            Manifest.permission.VIBRATE, // Gimbal rotation
-            Manifest.permission.INTERNET, // API requests
-            Manifest.permission.ACCESS_WIFI_STATE, // WIFI connected products
-            Manifest.permission.ACCESS_COARSE_LOCATION, // Maps
-            Manifest.permission.ACCESS_NETWORK_STATE, // WIFI connected products
-            Manifest.permission.CHANGE_WIFI_STATE, // Changing between WIFI and USB connection
             Manifest.permission.WRITE_EXTERNAL_STORAGE, // Log files
             Manifest.permission.BLUETOOTH, // Bluetooth connected products
             Manifest.permission.BLUETOOTH_ADMIN, // Bluetooth connected products
-            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_CONNECT
     };
 
     private final List<String> missingPermission = new ArrayList<>();
@@ -60,11 +57,9 @@ public class MainActivity extends Activity implements ServiceConnection {
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         checkAndRequestPermissions();
-        // see if has agreed
-        hasAgreed();
+        super.onCreate(savedInstanceState);
+        havePermission();
         StartBt();
 
         setContentView(R.layout.activity_main);
@@ -77,18 +72,8 @@ public class MainActivity extends Activity implements ServiceConnection {
                 if (jSessionService != null) {
                     jSessionService.LocationReceived(myList);
                 }
-                //  Thread.sleep(2000);
-                //  jSessionService.LocationReceived(myList);
             }
         });
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (null != jSessionService) {
-//                    jSessionService.LocationReceived(55.53433, 45.23232, 123.12, 10.3);
-//                }
-//            }
-//        });
 
         btn = findViewById(R.id.button1);
 
@@ -164,39 +149,7 @@ public class MainActivity extends Activity implements ServiceConnection {
     }
 
     public void hasAgreed() {
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    RC_INTGPS);
-            return;
-        }
-
         havePermission();
-    }
-
-
-    /**
-     * Callback from JSessionService if there is a fatal error.
-     * Display message then terminate service.
-     */
-    public void fatalError(final String tit, final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
-                adb.setTitle(tit);
-                adb.setMessage(msg);
-                adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        StopBt();
-                    }
-                });
-                adb.show();
-            }
-        });
     }
 
 
