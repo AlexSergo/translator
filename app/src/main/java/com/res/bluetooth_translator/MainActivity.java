@@ -36,6 +36,10 @@ public class MainActivity extends Activity implements ServiceConnection {
 
     private Button btn;
 
+    public DataTransfer dataTransfer = new DataTransfer();
+
+    private final int FPS = 100;
+
     private static final int REQUEST_PERMISSION_CODE = 12345;
 
     private static final String[] REQUIRED_PERMISSION_LIST = new String[] {
@@ -63,17 +67,10 @@ public class MainActivity extends Activity implements ServiceConnection {
         StartBt();
 
         setContentView(R.layout.activity_main);
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<Entity> myList = new ArrayList();
-                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -1.2, true));
-                myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
-                if (jSessionService != null) {
-                    jSessionService.LocationReceived(myList);
-                }
-            }
-        });
+
+        if (!dataTransfer.isAlive()) {
+            dataTransfer.start();
+        }
 
         btn = findViewById(R.id.button1);
 
@@ -207,6 +204,25 @@ public class MainActivity extends Activity implements ServiceConnection {
                 finish();
             } else {
                 havePermission();
+            }
+        }
+    }
+
+    private class DataTransfer extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                ArrayList<Entity> myList = new ArrayList();
+                myList.add(new Entity(55.53433, 45.23232, 323.12, 30.0, 0, -1.2, true));
+                myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+                if (jSessionService != null) {
+                    jSessionService.LocationReceived(myList);
+                }
+                try {
+                    Thread.sleep(FPS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
