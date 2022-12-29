@@ -223,6 +223,17 @@ public class MainActivity extends Activity implements ServiceConnection {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                myList = new ArrayList();
+                myList.add(new Entity(55.33433, 45.13232, 323.12, 30.0, 0, -1.2, true));
+                myList.add(new Entity(52.01433, 45.23232, 123.12, 30.0));
+                if (jSessionService != null) {
+                    jSessionService.LocationReceived(myList);
+                }
+                try {
+                    Thread.sleep(FPS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
